@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WebStoreMVC.Data.Entities.Catalog;
 using WebStoreMVC.Data.Entities.Identity;
 
 namespace WebStoreMVC.Data;
@@ -11,6 +12,9 @@ public class MyContextShopMVC : IdentityDbContext<UserEntity, RoleEntity, long>
     {
 
     }
+
+    public DbSet<CategoryEntity> Categories { get; set; }
+    public DbSet<ProductEntity> Products { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

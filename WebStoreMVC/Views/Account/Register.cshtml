@@ -1,0 +1,48 @@
+﻿@model WebStoreMVC.Models.Account.RegisterViewModel
+
+<h1 class="text-center">Реєстрація на сайті</h1>
+
+<form asp-action="Register"
+      class="col-md-6 offset-md-3"
+      enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label>"></label>
+        <input asp-for="LastName" class="form-control">
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label>"></label>
+        <input asp-for="FirstName" class="form-control">
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label>"></label>
+        <input asp-for="Email" class="form-control">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label>"></label>
+        <input asp-for="Password" class="form-control">
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ConfirmPassword" class="form-label>"></label>
+        <input asp-for="ConfirmPassword" class="form-control">
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FileImage" class="form-label>"></label>
+        <input asp-for="FileImage" class="form-control">
+        <span asp-validation-for="FileImage" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success">Зареєструватися</button>
+    </div>
+</form>

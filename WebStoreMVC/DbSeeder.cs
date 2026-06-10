@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using System.Text.Json;
 using WebStoreMVC.Data.Entities.Identity;
 using WebStoreMVC.Interfaces;
@@ -12,26 +11,30 @@ public static class DbSeeder
 {
     public static async Task SeedData(this WebApplication webApplication)
     {
+        //Це для того, щоб запрости у Dependecy Injection потрібні сервіси для роботи з базою даних та ролями.
         using var scope = webApplication.Services.CreateScope();
+        // Отримуємо сервіси з DI контейнера
         var services = scope.ServiceProvider;
+
         var context = services.GetRequiredService<Data.MyContextShopMVC>();
         await context.Database.MigrateAsync();
-        var roleManager = services.GetRequiredService<RoleManager<Data.Entities.Identity.RoleEntity>>();
+        var roleManager = services.GetRequiredService<RoleManager<RoleEntity>>();
         var userManager = services.GetRequiredService<UserManager<UserEntity>>();
-        if (!context.Roles.Any())
+        if (!context.Roles.Any()) // Якщо в БД не існує ролей
         {
             // Створення ролей
             foreach (var roleName in Constants.Roles.AllRoles)
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
                 {
-                    await roleManager.CreateAsync(new Data.Entities.Identity.RoleEntity { Name = roleName });
+                    await roleManager.CreateAsync(new RoleEntity { Name = roleName });
                 }
             }
         }
 
-        if (!context.Users.Any()) // для того щоб працювати з зображеннями та додати аватар
+        if (!context.Users.Any()) // Якщо в БД не існує користувачів
         {
+            // Отримує інтерфейс дял роботи з зображеннями, щоб встановити аватар для користувача
             var imageService = services.GetRequiredService<IImageService>();
             var jsonFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JsonData", "Users.json");
             if (File.Exists(jsonFile))
@@ -39,8 +42,8 @@ public static class DbSeeder
                 var jsonData = await File.ReadAllTextAsync(jsonFile);
                 try
                 {
-                    var users = JsonSerializer.Deserialize<List<SeederUserModel>>(jsonData)
-                    foreach(var user in users)
+                    var users = JsonSerializer.Deserialize<List<SeederUserModel>>(jsonData);
+                    foreach (var user in users)
                     {
                         var entity = new UserEntity
                         {
@@ -53,9 +56,10 @@ public static class DbSeeder
                         var result = await userManager.CreateAsync(entity, user.Password);
                         if (!result.Succeeded)
                         {
-                            Console.WriteLine("Помилка створення користувача " + user.Email);
+                            Console.WriteLine("Помилка стоврення користувача " + user.Email);
+                            continue;
                         }
-                        foreach(var role in user.Roles)
+                        foreach (var role in user.Roles)
                         {
                             if (await roleManager.RoleExistsAsync(role))
                                 await userManager.AddToRoleAsync(entity, role);
@@ -66,14 +70,13 @@ public static class DbSeeder
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Помилка читання даних Json користувачів: {ex.Message}");
+                    Console.WriteLine("Помилка читання даних із Json користувачів" + ex.Message);
                 }
             }
             else
             {
                 Console.WriteLine("Помилка існування файлу Users.json");
             }
-            }
-        } 
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebStoreMVC.Data;
@@ -11,9 +12,11 @@ using WebStoreMVC.Data;
 namespace WebStoreMVC.Migrations
 {
     [DbContext(typeof(MyContextShopMVC))]
-    partial class MyContextShopMVCModelSnapshot : ModelSnapshot
+    [Migration("20260610063151_AddTableCategories")]
+    partial class AddTableCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,48 +167,6 @@ namespace WebStoreMVC.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tblCategories");
-                });
-
-            modelBuilder.Entity("WebStoreMVC.Data.Entities.Catalog.ProductEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("CategoryId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("tblProducts");
                 });
 
             modelBuilder.Entity("WebStoreMVC.Data.Entities.Identity.RoleEntity", b =>
@@ -361,17 +322,6 @@ namespace WebStoreMVC.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebStoreMVC.Data.Entities.Catalog.ProductEntity", b =>
-                {
-                    b.HasOne("WebStoreMVC.Data.Entities.Catalog.CategoryEntity", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("WebStoreMVC.Data.Entities.Identity.UserRoleEntity", b =>
                 {
                     b.HasOne("WebStoreMVC.Data.Entities.Identity.RoleEntity", "Role")
@@ -389,11 +339,6 @@ namespace WebStoreMVC.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WebStoreMVC.Data.Entities.Catalog.CategoryEntity", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("WebStoreMVC.Data.Entities.Identity.RoleEntity", b =>
