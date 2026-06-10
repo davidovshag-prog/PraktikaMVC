@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebStoreMVC.Data;
@@ -11,9 +12,11 @@ using WebStoreMVC.Data;
 namespace WebStoreMVC.Migrations
 {
     [DbContext(typeof(MyContextShopMVC))]
-    partial class MyContextShopMVCModelSnapshot : ModelSnapshot
+    [Migration("20260610080955_AddTableProductImages")]
+    partial class AddTableProductImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -21,4 +21,5 @@ public class ProductEntity : BaseEntity<long>
     public long CategoryId { get; set; }
 
     public CategoryEntity? Category { get; set; }
+    public ICollection<ProductImageEntity>? ProductImages { get; set; }
 }

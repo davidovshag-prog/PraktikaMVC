@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using WebStoreMVC.Data.Entities.Identity;
 using WebStoreMVC.Interfaces;
+using WebStoreMVC.Mapper;
 using WebStoreMVC.Models.Seeder;
 
 namespace WebStoreMVC;
@@ -76,6 +77,36 @@ public static class DbSeeder
             else
             {
                 Console.WriteLine("Помилка існування файлу Users.json");
+            }
+        }
+        if (!context.Categories.Any()) // Якщо в БД не існує категорій
+        {
+            // Отримує інтерфейс дял роботи з зображеннями, щоб встановити аватар для користувача
+            var imageService = services.GetRequiredService<IImageService>();
+            var categoryMapper = services.GetRequiredService<CategoryMapper>();
+            var jsonFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JsonData", "Categories.json");
+            if (File.Exists(jsonFile))
+            {
+                var jsonData = await File.ReadAllTextAsync(jsonFile);
+                try
+                {
+                    var categories = JsonSerializer.Deserialize<List<SeederCategoryModel>>(jsonData);
+                    foreach (var cat in categories)
+                    {
+                        var entity = categoryMapper.SeederCategoryToCategory(cat);
+                        entity.Image = await imageService.SaveImageFromUrlAsync(cat.Image);
+                        context.Categories.Add(entity);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Помилка читання даних із Json Категорій");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Помилка існування файлу Categories.json");
             }
         }
     }
