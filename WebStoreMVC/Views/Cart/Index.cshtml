@@ -1,0 +1,46 @@
+﻿@model List<WebStoreMVC.Models.Cart.CartItemModel>
+
+<div class="container py-2">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Кошик</h1>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Фото</th>
+                <th>Назва</th>
+                <th>Ціна</th>
+                <th>Кількість</th>
+                <th>Сума</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="/images/100_@item.Image"
+                             width="80">
+                    </td>
+
+                    <td>@item.Name</td>
+
+                    <td>@item.Price грн</td>
+
+                    <td>@item.Quantity</td>
+
+                    <td>@(item.Price* item.Quantity) грн</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>
+        Разом:
+        @Model.Sum(x => x.Price * x.Quantity) грн
+    </h3>
+
+</div>
