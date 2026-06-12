@@ -11,10 +11,11 @@ using WebStoreMVC.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddDbContext<MyContextShopMVC>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Роблю налаштування Identity - для того щоб працював UserManager та RoleManager  
+// Роблю налаштування Identity - Для того, щоб працювати UserManage і RoleManage
 builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
 {
     options.Password.RequireDigit = false;
@@ -31,9 +32,20 @@ builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddSingleton<CategoryMapper>();
 builder.Services.AddSingleton<ProductMapper>();
 
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+app.UseSession();
 
 var dir = builder.Configuration["ImagesDir"];
 string path = Path.Combine(Directory.GetCurrentDirectory(), dir);

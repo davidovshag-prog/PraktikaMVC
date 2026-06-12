@@ -4,7 +4,19 @@
     ViewData["Title"] = "Каталог товарів";
 }
 
-<div class="container py-5">
+<div class="container py-2">
+
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Home" asp-action="Index">Головна</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Продукти по категорії
+            </li>
+        </ol>
+    </nav>
+
     <div class="text-center mb-5">
         <h1 class="display-4 fw-bold">Каталог товарів</h1>
         <p class="text-muted">
