@@ -29,6 +29,7 @@ builder.Services.AddIdentity<UserEntity, RoleEntity>(options =>
 
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddSingleton<CategoryMapper>();
+builder.Services.AddSingleton<ProductMapper>();
 
 builder.Services.AddControllersWithViews();
 

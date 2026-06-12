@@ -15,6 +15,7 @@ public class MyContextShopMVC : IdentityDbContext<UserEntity, RoleEntity, long>
 
     public DbSet<CategoryEntity> Categories { get; set; }
     public DbSet<ProductEntity> Products { get; set; }
+    public DbSet<ProductImageEntity> ProductImages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

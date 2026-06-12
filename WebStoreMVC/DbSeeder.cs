@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using WebStoreMVC.Data.Entities;
+using WebStoreMVC.Data.Entities.Catalog;
 using WebStoreMVC.Data.Entities.Identity;
 using WebStoreMVC.Interfaces;
 using WebStoreMVC.Mapper;
@@ -71,7 +73,7 @@ public static class DbSeeder
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Помилка читання даних із Json користувачів" + ex.Message);
+                    Console.WriteLine("Помилка читання даних із Json користувачів");
                 }
             }
             else
@@ -79,6 +81,7 @@ public static class DbSeeder
                 Console.WriteLine("Помилка існування файлу Users.json");
             }
         }
+
         if (!context.Categories.Any()) // Якщо в БД не існує категорій
         {
             // Отримує інтерфейс дял роботи з зображеннями, щоб встановити аватар для користувача
@@ -109,5 +112,48 @@ public static class DbSeeder
                 Console.WriteLine("Помилка існування файлу Categories.json");
             }
         }
+
+        if (!context.Products.Any()) // Якщо в БД не існує продукт
+        {
+            // Отримує інтерфейс дял роботи з зображеннями, щоб встановити аватар для користувача
+            var imageService = services.GetRequiredService<IImageService>();
+            var productMapper = services.GetRequiredService<ProductMapper>();
+            var jsonFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JsonData", "Products.json");
+            if (File.Exists(jsonFile))
+            {
+                var jsonData = await File.ReadAllTextAsync(jsonFile);
+                try
+                {
+                    var products = JsonSerializer.Deserialize<List<SeederProductModel>>(jsonData);
+
+                    foreach (var prod in products)
+                    {
+                        var entity = productMapper.SeederProductModelToProductEntity(prod);
+                        context.Products.Add(entity);
+                        await context.SaveChangesAsync();
+                        short priority = 1;
+                        foreach (var img in prod.Images)
+                        {
+                            var entityImage = new ProductImageEntity();
+                            entityImage.Priority = priority;
+                            entityImage.Name = await imageService.SaveImageFromUrlAsync(img);
+                            entityImage.Product = entity;
+                            priority++;
+                            context.ProductImages.Add(entityImage);
+                            context.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Помилка читання даних із Json Products");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Помилка існування файлу Categories.json");
+            }
+        }
+
     }
 }

@@ -34,9 +34,5 @@
       </Content>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Mapper\" />
-    </ItemGroup>
-
 
 </Project>
