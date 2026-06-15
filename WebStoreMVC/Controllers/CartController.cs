@@ -47,4 +47,43 @@ public class CartController(MyContextShopMVC myContext) : Controller
 
         return RedirectToAction("Index");
     }
+
+    [HttpPost]
+    public IActionResult UpdateQuantity(long productId, int quantity)
+    {
+        var cart = HttpContext.Session
+            .GetObject<List<CartItemModel>>("Cart")
+            ?? [];
+
+        var item = cart.FirstOrDefault(x => x.ProductId == productId);
+        if (item != null)
+        {
+            if (quantity <= 0)
+            {
+                cart.Remove(item);
+            }
+            else
+            {
+                item.Quantity = quantity;
+            }
+        }
+
+        HttpContext.Session.SetObject("Cart", cart);
+
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public IActionResult RemoveFromCart(long productId)
+    {
+        var cart = HttpContext.Session
+            .GetObject<List<CartItemModel>>("Cart")
+            ?? [];
+
+        cart.RemoveAll(x => x.ProductId == productId);
+
+        HttpContext.Session.SetObject("Cart", cart);
+
+        return RedirectToAction("Index");
+    }
 }
