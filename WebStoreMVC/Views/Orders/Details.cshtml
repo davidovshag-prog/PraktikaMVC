@@ -1,0 +1,36 @@
+﻿@model WebStoreMVC.Models.Order.OrderDetailsModel
+
+<div class="container py-2">
+    <h1 class="display-4 fw-bold text-center mb-5">Замовлення #@Model.Id</h1>
+
+    <p>Дата: @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
+    <p>Статус: @Model.OrderStatusName</p>
+    <p>Адреса: @Model.Address</p>
+    <p>Телефон: @Model.Phone</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Фото</th>
+                <th>Назва</th>
+                <th>Ціна</th>
+                <th>Кількість</th>
+                <th>Сума</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td><img src="/images/100_@item.Image" width="60" /></td>
+                    <td>@item.Name</td>
+                    <td>@item.Price грн</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Price* item.Quantity) грн</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Разом: @Model.TotalAmount грн</h3>
+</div>

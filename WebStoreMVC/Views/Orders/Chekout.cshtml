@@ -1,0 +1,46 @@
+﻿@model WebStoreMVC.Models.Order.CheckoutModel
+
+<div class="container py-2">
+    <h1 class="display-4 fw-bold text-center mb-5">Оформлення замовлення</h1>
+
+    <form asp-action="Checkout" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Адреса доставки</label>
+            <input type="text" name="Address" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Телефон</label>
+            <input type="text" name="Phone" class="form-control" required />
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Фото</th>
+                    <th>Назва</th>
+                    <th>Ціна</th>
+                    <th>Кількість</th>
+                    <th>Сума</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr>
+                        <td><img src="/images/100_@item.Image" width="60" /></td>
+                        <td>@item.Name</td>
+                        <td>@item.Price грн</td>
+                        <td>@item.Quantity</td>
+                        <td>@(item.Price* item.Quantity) грн</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3>Разом: @Model.Total грн</h3>
+
+        <button type="submit" class="btn btn-success">Підтвердити замовлення</button>
+    </form>
+</div>
