@@ -4,6 +4,7 @@ using System.Text.Json;
 using WebStoreMVC.Data.Entities;
 using WebStoreMVC.Data.Entities.Catalog;
 using WebStoreMVC.Data.Entities.Identity;
+using WebStoreMVC.Data.Entities.Order;
 using WebStoreMVC.Interfaces;
 using WebStoreMVC.Mapper;
 using WebStoreMVC.Models.Seeder;
@@ -155,5 +156,14 @@ public static class DbSeeder
             }
         }
 
+        if (!context.OrderStatuses.Any())
+        {
+            var statuses = Constants.OrderStatuses.All
+                .Select(name => new OrderStatusEntity { Name = name })
+                .ToList();
+
+            await context.OrderStatuses.AddRangeAsync(statuses);
+            await context.SaveChangesAsync();
+        }
     }
 }
